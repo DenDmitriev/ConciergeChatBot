@@ -26,9 +26,6 @@ struct Config: Codable {
         }
         guard let url else { return nil }
         
-        print("🔑 config.plist", url.absoluteString, "isFileURL", url.isFileURL)
-        let urls = Bundle.module.urls(forResourcesWithExtension: nil, subdirectory: "")
-        print("contents", urls)
         let data = try! Data(contentsOf: url)
         let decoder = PropertyListDecoder()
         guard let result = try? decoder.decode(Config.self, from: data) else { return nil }
