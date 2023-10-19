@@ -1,0 +1,9 @@
+#
+#  amvera.yml
+#  ConciergeChatBot
+#
+#  Created by Denis Dmitriev on 18.10.2023.
+#
+
+run:
+  containerPort: 8080

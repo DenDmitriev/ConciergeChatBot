@@ -13,6 +13,8 @@ let package = Package(
         .package(url: "https://github.com/vapor/fluent.git", from: "4.8.0"),
         // 🪶 Fluent driver for SQLite.
         .package(url: "https://github.com/vapor/fluent-sqlite-driver.git", from: "4.0.0"),
+        // 🤖 The wrapper for the Telegram Bot API
+        .package(url: "https://github.com/nerzh/telegram-vapor-bot", .upToNextMajor(from: "2.1.0")),
     ],
     targets: [
         .executableTarget(
@@ -21,6 +23,11 @@ let package = Package(
                 .product(name: "Fluent", package: "fluent"),
                 .product(name: "FluentSQLiteDriver", package: "fluent-sqlite-driver"),
                 .product(name: "Vapor", package: "vapor"),
+                .product(name: "TelegramVaporBot", package: "telegram-vapor-bot"),
+            ],
+            resources: [
+                .copy("config.json"),
+                .copy("agreementForTheStorageOfPersonalData.txt")
             ]
         ),
         .testTarget(name: "AppTests", dependencies: [
@@ -31,6 +38,7 @@ let package = Package(
             .product(name: "Vapor", package: "vapor"),
             .product(name: "Fluent", package: "Fluent"),
             .product(name: "FluentSQLiteDriver", package: "fluent-sqlite-driver"),
+            .product(name: "TelegramVaporBot", package: "telegram-vapor-bot"),
         ])
     ]
 )
