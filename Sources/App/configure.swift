@@ -13,7 +13,7 @@ public func configure(_ app: Application) async throws {
 
     app.databases.use(DatabaseConfigurationFactory.sqlite(.file("db.sqlite")), as: .sqlite)
     
-    // Database configure
+    // MARK: - Database configure
     if let workingDirectory = URL(string: app.directory.workingDirectory) {
         let dataDirectory = workingDirectory.appendingPathComponent("data")
         if !FileManager.default.fileExists(atPath: dataDirectory.path) {
@@ -36,7 +36,24 @@ public func configure(_ app: Application) async throws {
     app.migrations.add(CreateCar())
     app.migrations.add(CreateBlockedCar())
     try await app.autoMigrate()
+    
+    // MARK: - TelegramVaporBot configure
+    let tgApi = ApiKeys.decode().telegramApiKey
+    // set level of debug if you needed
+    TGBot.log.logLevel = app.logger.logLevel
+    let bot: TGBot = .init(app: app, botId: tgApi)
+    await TGBOT.setConnection(try await TGLongPollingConnection(bot: bot))
+    
+    await DefaultBotHandlers.addHandlers(app: app, connection: TGBOT.connection)
+    try await RegistrationHouseBotHandlers.addHandlers(app: app, connection: TGBOT.connection)
+    try await SignResidentsBotHandlers.addHandlers(app: app, connection: TGBOT.connection)
+    await PrivateBotHandlers.addHandlers(app: app, connection: TGBOT.connection)
+    try await CarBotHandler.addHandlers(app: app, connection: TGBOT.connection)
+    await NeighborBotHandlers.addHandlers(app: app, connection: TGBOT.connection)
+    await AdminBotHandlers.addHandlers(app: app, connection: TGBOT.connection)
+    
+    try await TGBOT.connection.start()
 
-    // register routes
+    // MARK: - Register routes
     try routes(app)
 }

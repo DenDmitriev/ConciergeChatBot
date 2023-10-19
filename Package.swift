@@ -26,8 +26,8 @@ let package = Package(
                 .product(name: "TelegramVaporBot", package: "telegram-vapor-bot"),
             ],
             resources: [
-                .copy("config.json"),
-                .copy("agreementForTheStorageOfPersonalData.txt")
+                .copy("Resources/config.json"),
+                .copy("Resources/agreementForTheStorageOfPersonalData.txt")
             ]
         ),
         .testTarget(name: "AppTests", dependencies: [
