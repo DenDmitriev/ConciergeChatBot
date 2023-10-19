@@ -45,12 +45,12 @@ public func configure(_ app: Application) async throws {
     await TGBOT.setConnection(try await TGLongPollingConnection(bot: bot))
     
     await DefaultBotHandlers.addHandlers(app: app, connection: TGBOT.connection)
-    try await RegistrationHouseBotHandlers.addHandlers(app: app, connection: TGBOT.connection)
-    try await SignResidentsBotHandlers.addHandlers(app: app, connection: TGBOT.connection)
-    await PrivateBotHandlers.addHandlers(app: app, connection: TGBOT.connection)
-    try await CarBotHandler.addHandlers(app: app, connection: TGBOT.connection)
-    await NeighborBotHandlers.addHandlers(app: app, connection: TGBOT.connection)
-    await AdminBotHandlers.addHandlers(app: app, connection: TGBOT.connection)
+//    try await RegistrationHouseBotHandlers.addHandlers(app: app, connection: TGBOT.connection)
+//    try await SignResidentsBotHandlers.addHandlers(app: app, connection: TGBOT.connection)
+//    await PrivateBotHandlers.addHandlers(app: app, connection: TGBOT.connection)
+//    try await CarBotHandler.addHandlers(app: app, connection: TGBOT.connection)
+//    await NeighborBotHandlers.addHandlers(app: app, connection: TGBOT.connection)
+//    await AdminBotHandlers.addHandlers(app: app, connection: TGBOT.connection)
     
     try await TGBOT.connection.start()
 
