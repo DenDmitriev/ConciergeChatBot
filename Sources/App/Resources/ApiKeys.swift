@@ -10,7 +10,7 @@ import Foundation
 struct ApiKeys: Codable {
     let telegramApiKey: String
     
-    static func decode() -> ApiKeys {
+    static func decode() -> ApiKeys? {
         guard
             let bundleIdentifier = Bundle.module.bundleIdentifier,
             let bundle = Bundle(identifier: bundleIdentifier),
@@ -21,7 +21,7 @@ struct ApiKeys: Codable {
         if let result = try? decoder.decode(ApiKeys.self, from: data) {
             return result
         } else {
-            return .init(telegramApiKey: "")
+            return nil// .init(telegramApiKey: "XXXXXXXXXX:YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY")
         }
     }
 }

@@ -38,20 +38,21 @@ public func configure(_ app: Application) async throws {
     try await app.autoMigrate()
     
     // MARK: - TelegramVaporBot configure
-    let tgApi = "1416179872:AAH8OMUniQk3QY5qUT2EoT9hEHP09LKUXrQ"// ApiKeys.decode().telegramApiKey
+    // guard let tgApi = ApiKeys.decode()?.telegramApiKey else { return }
+    let tgApi = "1416179872:AAH8OMUniQk3QY5qUT2EoT9hEHP09LKUXrQ"
     // set level of debug if you needed
     TGBot.log.logLevel = app.logger.logLevel
     let bot: TGBot = .init(app: app, botId: tgApi)
     await TGBOT.setConnection(try await TGLongPollingConnection(bot: bot))
     
-    await TestBotsHadlers.addHandlers(app: app, connection: TGBOT.connection)
-//    await DefaultBotHandlers.addHandlers(app: app, connection: TGBOT.connection)
-//    try await RegistrationHouseBotHandlers.addHandlers(app: app, connection: TGBOT.connection)
-//    try await SignResidentsBotHandlers.addHandlers(app: app, connection: TGBOT.connection)
-//    await PrivateBotHandlers.addHandlers(app: app, connection: TGBOT.connection)
-//    try await CarBotHandler.addHandlers(app: app, connection: TGBOT.connection)
-//    await NeighborBotHandlers.addHandlers(app: app, connection: TGBOT.connection)
-//    await AdminBotHandlers.addHandlers(app: app, connection: TGBOT.connection)
+//    await TestBotsHadlers.addHandlers(app: app, connection: TGBOT.connection)
+    await DefaultBotHandlers.addHandlers(app: app, connection: TGBOT.connection)
+    try await RegistrationHouseBotHandlers.addHandlers(app: app, connection: TGBOT.connection)
+    try await SignResidentsBotHandlers.addHandlers(app: app, connection: TGBOT.connection)
+    await PrivateBotHandlers.addHandlers(app: app, connection: TGBOT.connection)
+    try await CarBotHandler.addHandlers(app: app, connection: TGBOT.connection)
+    await NeighborBotHandlers.addHandlers(app: app, connection: TGBOT.connection)
+    await AdminBotHandlers.addHandlers(app: app, connection: TGBOT.connection)
     
     try await TGBOT.connection.start()
 
