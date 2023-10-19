@@ -34,7 +34,6 @@ public func configure(_ app: Application) async throws {
             return "/data/db.sqlite"
         }
     }()
-    print("💽 Database exists on path", databasePath, FileManager.default.fileExists(atPath: databasePath))
     app.databases.use(DatabaseConfigurationFactory.sqlite(.file(databasePath)), as: .sqlite)
 
     app.migrations.add(CreateHouse())
@@ -43,10 +42,12 @@ public func configure(_ app: Application) async throws {
     app.migrations.add(CreateBlockedCar())
     try await app.autoMigrate()
     
+    print("💽 Database exists on path", databasePath, FileManager.default.fileExists(atPath: databasePath))
+    
     // MARK: - TelegramVaporBot configure
-     guard let tgApi = ApiKeys.decode()?.telegramApiKey else { return }
-    print("🔐 Telegram API key gated")
-//    let tgApi = "1416179872:AAH8OMUniQk3QY5qUT2EoT9hEHP09LKUXrQ"
+//     guard let tgApi = ApiKeys.decode()?.telegramApiKey else { return }
+//    print("🔐 Telegram API key gated")
+    let tgApi = "1416179872:AAH8OMUniQk3QY5qUT2EoT9hEHP09LKUXrQ"
     // set level of debug if you needed
     TGBot.log.logLevel = app.logger.logLevel
     let bot: TGBot = .init(app: app, botId: tgApi)
