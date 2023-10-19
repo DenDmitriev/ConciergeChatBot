@@ -13,6 +13,8 @@ public func configure(_ app: Application) async throws {
 
     app.databases.use(DatabaseConfigurationFactory.sqlite(.file("db.sqlite")), as: .sqlite)
     
+    let runType: RunType = .prod
+    
     // MARK: - Database configure
     if let workingDirectory = URL(string: app.directory.workingDirectory) {
         let dataDirectory = workingDirectory.appendingPathComponent("data")
@@ -24,11 +26,15 @@ public func configure(_ app: Application) async throws {
             }
         }
     }
-    // For testing
-//    let databasePath = app.directory.workingDirectory + "data/db.sqlite"
-    // For production
-    let databasePath = "/data/db.sqlite"
-    print("database exists on path", databasePath, FileManager.default.fileExists(atPath: databasePath))
+    let databasePath: String = {
+        switch runType {
+        case .dev:
+            return app.directory.workingDirectory + "data/db.sqlite"
+        case .prod:
+            return "/data/db.sqlite"
+        }
+    }()
+    print("💽 Database exists on path", databasePath, FileManager.default.fileExists(atPath: databasePath))
     app.databases.use(DatabaseConfigurationFactory.sqlite(.file(databasePath)), as: .sqlite)
 
     app.migrations.add(CreateHouse())
@@ -38,8 +44,9 @@ public func configure(_ app: Application) async throws {
     try await app.autoMigrate()
     
     // MARK: - TelegramVaporBot configure
-    // guard let tgApi = ApiKeys.decode()?.telegramApiKey else { return }
-    let tgApi = "1416179872:AAH8OMUniQk3QY5qUT2EoT9hEHP09LKUXrQ"
+     guard let tgApi = ApiKeys.decode()?.telegramApiKey else { return }
+    print("🔐 Telegram API key gated")
+//    let tgApi = "1416179872:AAH8OMUniQk3QY5qUT2EoT9hEHP09LKUXrQ"
     // set level of debug if you needed
     TGBot.log.logLevel = app.logger.logLevel
     let bot: TGBot = .init(app: app, botId: tgApi)
