@@ -12,11 +12,13 @@ struct ApiKeys: Codable {
     
     static func decode() -> ApiKeys? {
         guard
-            let bundleIdentifier = Bundle.module.bundleIdentifier,
-            let bundle = Bundle(identifier: bundleIdentifier),
-            let url = bundle.url(forResource: "config", withExtension: "json"),
-            let data = try? Data(contentsOf: url)
+//            let bundleIdentifier = Bundle.module.bundleIdentifier,
+//            let bundle = Bundle(identifier: bundleIdentifier),
+            let configURL = Bundle.module.url(forResource: "config", withExtension: "json"),
+//            let url = bundle.url(forResource: "config", withExtension: "json"),
+            let data = try? Data(contentsOf: configURL)
         else { return .init(telegramApiKey: "") }
+        print(configURL.absoluteString)
         let decoder = JSONDecoder()
         if let result = try? decoder.decode(ApiKeys.self, from: data) {
             return result
@@ -25,5 +27,3 @@ struct ApiKeys: Codable {
         }
     }
 }
-
-

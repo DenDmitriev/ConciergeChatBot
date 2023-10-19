@@ -45,9 +45,10 @@ public func configure(_ app: Application) async throws {
     print("💽 Database exists on path", databasePath, FileManager.default.fileExists(atPath: databasePath))
     
     // MARK: - TelegramVaporBot configure
-//     guard let tgApi = ApiKeys.decode()?.telegramApiKey else { return }
-//    print("🔐 Telegram API key gated")
-    let tgApi = "1416179872:AAH8OMUniQk3QY5qUT2EoT9hEHP09LKUXrQ"
+     guard let apiKeys = ApiKeys.decode() else { return }
+    let tgApi = apiKeys.telegramApiKey
+    print("🔐 Telegram API key gated")
+//    let tgApi = "1416179872:AAH8OMUniQk3QY5qUT2EoT9hEHP09LKUXrQ"
     // set level of debug if you needed
     TGBot.log.logLevel = app.logger.logLevel
     let bot: TGBot = .init(app: app, botId: tgApi)
