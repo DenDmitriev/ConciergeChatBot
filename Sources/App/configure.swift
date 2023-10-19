@@ -2,6 +2,9 @@ import NIOSSL
 import Fluent
 import FluentSQLiteDriver
 import Vapor
+import TelegramVaporBot
+
+let TGBOT: TGBotConnection = .init()
 
 // configures your application
 public func configure(_ app: Application) async throws {
