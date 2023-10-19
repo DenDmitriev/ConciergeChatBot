@@ -5,6 +5,7 @@ import Vapor
 import TelegramVaporBot
 
 let TGBOT: TGBotConnection = .init()
+let RUNTYPE: RunType = .prod
 
 // configures your application
 public func configure(_ app: Application) async throws {
@@ -12,8 +13,6 @@ public func configure(_ app: Application) async throws {
     // app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
 
     app.databases.use(DatabaseConfigurationFactory.sqlite(.file("db.sqlite")), as: .sqlite)
-    
-    let runType: RunType = .prod
     
     // MARK: - Database configure
     if let workingDirectory = URL(string: app.directory.workingDirectory) {
@@ -27,7 +26,7 @@ public func configure(_ app: Application) async throws {
         }
     }
     let databasePath: String = {
-        switch runType {
+        switch RUNTYPE {
         case .dev:
             return app.directory.workingDirectory + "data/db.sqlite"
         case .prod:
