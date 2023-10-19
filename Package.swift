@@ -26,8 +26,14 @@ let package = Package(
                 .product(name: "TelegramVaporBot", package: "telegram-vapor-bot"),
             ],
             resources: [
-                .process("Resources/config.json"),
-                .process("Resources/agreementForTheStorageOfPersonalData.txt")
+                .process("Resources/config.plist"),
+            ], linkerSettings: [
+                .unsafeFlags([
+                    "-Xlinker", "-sectcreate",
+                    "-Xlinker", "__TEXT",
+                    "-Xlinker", "__info_plist",
+                    "-Xlinker", "Sources/App/Resources/config.plist"
+                ])
             ]
         ),
         .testTarget(name: "AppTests", dependencies: [

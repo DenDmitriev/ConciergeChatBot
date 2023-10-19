@@ -79,10 +79,12 @@ final class SignResidentsBotHandlers: BotHandler {
     private static func agreementOfPersonalDataHandler(app: Vapor.Application, connection: TGConnectionPrtcl, update: TGUpdate, bot: TGBot, userId: Int64) async throws {
         guard let chatId = residentCache.value(forKey: userId)?.house else { return }
         let publicChat = try await connection.bot.getChat(params: .init(chatId: .chat(chatId)))
-        guard let title = publicChat.title else { return }
+        guard
+            let title = publicChat.title,
+            let rawPersonalText = Config.parseConfig()?.personalDataAgreement
+        else { return }
         
-        let rawText = AgreementForTheStorageOfPersonalData.getText() ?? ""
-        let personalText = rawText.replacingOccurrences(of: "CHAT_NAME", with: title)
+        let personalText = rawPersonalText.replacingOccurrences(of: "CHAT_NAME", with: title)
         try await connection.bot.sendMessage(params: .init(chatId: .chat(userId), text: personalText))
         try await agreementOfPersonalDataButtons(connection: connection, userId: userId)
         
