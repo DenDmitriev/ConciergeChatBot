@@ -46,8 +46,7 @@ public func configure(_ app: Application) async throws {
     // MARK: - TelegramVaporBot configure
     guard let apiKeys = Config.parseConfig() else { return }
     let tgApi = apiKeys.telegramApiKey
-    print("🔐 Telegram API key gated", tgApi)
-//    let tgApi = "1416179872:AAH8OMUniQk3QY5qUT2EoT9hEHP09LKUXrQ"
+    print("🔐 Telegram API key gated")
     // set level of debug if you needed
     TGBot.log.logLevel = app.logger.logLevel
     let bot: TGBot = .init(app: app, botId: tgApi)
