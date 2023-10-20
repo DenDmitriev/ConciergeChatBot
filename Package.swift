@@ -26,7 +26,8 @@ let package = Package(
                 .product(name: "TelegramVaporBot", package: "telegram-vapor-bot"),
             ],
             resources: [
-                .process("Resources/config.plist"),
+                .process("Resources/config.plist"), // TG API KEY
+                .process("Resources/info.plist"),
             ]
         ),
         .testTarget(name: "AppTests", dependencies: [

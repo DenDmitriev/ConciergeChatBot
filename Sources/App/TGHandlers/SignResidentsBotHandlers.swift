@@ -81,7 +81,7 @@ final class SignResidentsBotHandlers: BotHandler {
         let publicChat = try await connection.bot.getChat(params: .init(chatId: .chat(chatId)))
         guard
             let title = publicChat.title,
-            let rawPersonalText = Config.parseConfig()?.personalDataAgreement
+            let rawPersonalText = Info.parse()?.personalDataAgreement
         else { return }
         
         let personalText = rawPersonalText.replacingOccurrences(of: "CHAT_NAME", with: title)
