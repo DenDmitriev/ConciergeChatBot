@@ -6,6 +6,7 @@ import TelegramVaporBot
 
 let TGBOT: TGBotConnection = .init()
 let RUNTYPE: RunType = .prod
+let TGBOTNAME = "@ConciergeChatBot"
 
 // configures your application
 public func configure(_ app: Application) async throws {

@@ -44,7 +44,7 @@ final class DefaultBotHandlers: BotHandler {
     
     /// Handler for Command /concierge in public
     private static func commandConciergePublicHandler(app: Vapor.Application, connection: TGConnectionPrtcl) async {
-        await connection.dispatcher.add(TGCommandHandler(commands: ["/concierge@ConciergeChatBot"]) { update, bot in
+        await connection.dispatcher.add(TGCommandHandler(commands: ["/concierge\(TGBOTNAME)"]) { update, bot in
             guard
                 let chatId = update.message?.chat.id,
                 update.message?.chat.type == .group

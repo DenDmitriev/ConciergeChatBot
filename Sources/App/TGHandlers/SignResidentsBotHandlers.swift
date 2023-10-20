@@ -80,7 +80,7 @@ final class SignResidentsBotHandlers: BotHandler {
         let publicChat = try await connection.bot.getChat(params: .init(chatId: .chat(chatId)))
         guard
             let title = publicChat.title,
-            let personalText = Info.parse(for: title)?.personalDataAgreement
+            let personalText = Info.parse(for: title, botName: TGBOTNAME)?.personalDataAgreement
         else { return }
         
         try await connection.bot.sendMessage(params: .init(chatId: .chat(userId), text: personalText))
@@ -349,7 +349,7 @@ extension SignResidentsBotHandlers {
             case .isRight:
                 return "Запись верна?"
             case .storagePersonalData:
-                return "Согласие на обработку персональных данных для бота @ConciergeChatBot в Telegram"
+                return "Согласие на обработку персональных данных для бота \(TGBOTNAME) в Telegram"
             }
         }
         
