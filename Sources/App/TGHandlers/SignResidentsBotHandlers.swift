@@ -28,7 +28,6 @@ final class SignResidentsBotHandlers: BotHandler {
         let dialogState = state[userId] ?? .ready
         switch dialogState {
         case .ready:
-            print("ready")
             return
         case .waitApprovePersonalData:
             guard let userId = update.callbackQuery?.from.id else { return }
@@ -81,10 +80,9 @@ final class SignResidentsBotHandlers: BotHandler {
         let publicChat = try await connection.bot.getChat(params: .init(chatId: .chat(chatId)))
         guard
             let title = publicChat.title,
-            let rawPersonalText = Info.parse()?.personalDataAgreement
+            let personalText = Info.parse(for: title)?.personalDataAgreement
         else { return }
         
-        let personalText = rawPersonalText.replacingOccurrences(of: "CHAT_NAME", with: title)
         try await connection.bot.sendMessage(params: .init(chatId: .chat(userId), text: personalText))
         try await agreementOfPersonalDataButtons(connection: connection, userId: userId)
         

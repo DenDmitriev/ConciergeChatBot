@@ -26,8 +26,8 @@ final class AdminBotHandlers: BotHandler {
             let buttons = buildButtons(chatId: chatId)
             let keyboard: TGInlineKeyboardMarkup = .init(inlineKeyboard: buttons)
             let params: TGSendMessageParams = .init(chatId: .chat(user.id),
-                           text: "Какой у вас вопрос?",
-                           replyMarkup: .inlineKeyboardMarkup(keyboard))
+                                                    text: Dialog.defaultQuestion,
+                                                    replyMarkup: .inlineKeyboardMarkup(keyboard))
             
             try await bot.sendMessage(params: params)
         }

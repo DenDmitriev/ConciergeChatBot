@@ -30,7 +30,6 @@ final class RegistrationHouseBotHandlers: BotHandler {
         let dialogState = state[userId] ?? .ready
         switch dialogState {
         case .ready:
-            print("ready")
             return
         case .waitLowFloor:
             guard let userId = update.callbackQuery?.from.id else { return }

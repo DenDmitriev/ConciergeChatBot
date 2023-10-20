@@ -12,29 +12,13 @@ public func configure(_ app: Application) async throws {
     // uncomment to serve files from /Public folder
     // app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
 
-    app.databases.use(DatabaseConfigurationFactory.sqlite(.file("db.sqlite")), as: .sqlite)
-    
     // MARK: - Database configure
-    if let workingDirectory = URL(string: app.directory.workingDirectory) {
-        let dataDirectory = workingDirectory.appendingPathComponent("data")
-        if !FileManager.default.fileExists(atPath: dataDirectory.path) {
-            do {
-                try FileManager.default.createDirectory(atPath: dataDirectory.path, withIntermediateDirectories: true)
-            } catch {
-                print(error.localizedDescription)
-            }
-        }
-    }
-    let databasePath: String = {
-        switch RUNTYPE {
-        case .dev:
-            return app.directory.workingDirectory + "data/db.sqlite"
-        case .prod:
-            return "/data/db.sqlite"
-        }
-    }()
+    let databaseFile = "db.sqlite"
+    app.databases.use(DatabaseConfigurationFactory.sqlite(.file(databaseFile)), as: .sqlite)
+    let databasePath = DatabaseService.createPath(for: RUNTYPE, file: databaseFile, app: app)
     app.databases.use(DatabaseConfigurationFactory.sqlite(.file(databasePath)), as: .sqlite)
 
+    // Migration
     app.migrations.add(CreateHouse())
     app.migrations.add(CreateResident())
     app.migrations.add(CreateCar())
@@ -47,12 +31,13 @@ public func configure(_ app: Application) async throws {
     guard let apiKeys = Config.parse() else { return }
     let tgApi = apiKeys.telegramApiKey
     print("🔐 Telegram API key gated")
+    
     // set level of debug if you needed
     TGBot.log.logLevel = app.logger.logLevel
     let bot: TGBot = .init(app: app, botId: tgApi)
     await TGBOT.setConnection(try await TGLongPollingConnection(bot: bot))
     
-//    await TestBotsHadlers.addHandlers(app: app, connection: TGBOT.connection)
+    // MARK: - Register handlers
     await DefaultBotHandlers.addHandlers(app: app, connection: TGBOT.connection)
     try await RegistrationHouseBotHandlers.addHandlers(app: app, connection: TGBOT.connection)
     try await SignResidentsBotHandlers.addHandlers(app: app, connection: TGBOT.connection)
@@ -61,6 +46,7 @@ public func configure(_ app: Application) async throws {
     await NeighborBotHandlers.addHandlers(app: app, connection: TGBOT.connection)
     await AdminBotHandlers.addHandlers(app: app, connection: TGBOT.connection)
     
+    // MARK: - Start
     try await TGBOT.connection.start()
 
     // MARK: - Register routes

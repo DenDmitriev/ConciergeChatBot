@@ -130,17 +130,17 @@ final class NeighborBotHandlers: BotHandler {
                 try await bot.sendMessage(params: params)
             }
         case .failure(let failure):
-            var text: String = ""
             switch failure {
             case .empty:
-                text += failure.localizedDescription
+                let text = failure.localizedDescription
+                let params: TGSendMessageParams = .init(chatId: .chat(userId), text: text)
+                try await bot.sendMessage(params: params)
             default:
-                text += "Не удалось получить список\n"
+                var text = Dialog.cantGetList
                 text += "Ошибка: " + failure.localizedDescription
+                let params: TGSendMessageParams = .init(chatId: .chat(userId), text: text)
+                try await bot.sendMessage(params: params)
             }
-            
-            let params: TGSendMessageParams = .init(chatId: .chat(userId), text: text)
-            try await bot.sendMessage(params: params)
         }
     }
     
@@ -163,7 +163,7 @@ final class NeighborBotHandlers: BotHandler {
                 let params: TGSendMessageParams = .init(chatId: .chat(userId), text: text)
                 try await bot.sendMessage(params: params)
             default:
-                var text = "Не удалось получить список\n"
+                var text = Dialog.cantGetList
                 text += "Ошибка: " + failure.localizedDescription
                 let params: TGSendMessageParams = .init(chatId: .chat(userId), text: text)
                 try await bot.sendMessage(params: params)
@@ -188,17 +188,17 @@ final class NeighborBotHandlers: BotHandler {
                 try await bot.sendMessage(params: params)
             }
         case .failure(let failure):
-            var text: String = ""
             switch failure {
             case .empty:
-                text += failure.localizedDescription
+                let text = failure.localizedDescription
+                let params: TGSendMessageParams = .init(chatId: .chat(userId), text: text)
+                try await bot.sendMessage(params: params)
             default:
-                text += "Не удалось получить список\n"
+                var text = Dialog.cantGetList
                 text += "Ошибка: " + failure.localizedDescription
+                let params: TGSendMessageParams = .init(chatId: .chat(userId), text: text)
+                try await bot.sendMessage(params: params)
             }
-            
-            let params: TGSendMessageParams = .init(chatId: .chat(userId), text: text)
-            try await bot.sendMessage(params: params)
         }
     }
     

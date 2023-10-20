@@ -11,17 +11,18 @@ import FoundationNetworking
 #endif
 
 struct Info: Codable {
-    let personalDataAgreement: String
+    var personalDataAgreement: String
     
     enum CodingKeys: String, CodingKey {
         case personalDataAgreement = "PERSONAL_DATA_AGREEMENT"
     }
     
-    static func parse() -> Info? {
+    static func parse(for chatName: String) -> Info? {
         guard let url = Bundle.module.url(forResource: "info", withExtension: "plist") else { return nil }
         let data = try! Data(contentsOf: url)
         let decoder = PropertyListDecoder()
-        guard let result = try? decoder.decode(Info.self, from: data) else { return nil }
+        guard var result = try? decoder.decode(Info.self, from: data) else { return nil }
+        result.personalDataAgreement = result.personalDataAgreement.replacingOccurrences(of: "CHAT_NAME", with: chatName)
         return result
     }
 }

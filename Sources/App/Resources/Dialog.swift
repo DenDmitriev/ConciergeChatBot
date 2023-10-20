@@ -8,6 +8,9 @@
 import Foundation
 
 struct Dialog {
+    static let defaultQuestion = "Какой у вас вопрос?"
+    static let emptyList = "Список пуст."
+    static let cantGetList = "Не удалось получить список.\n"
     static let emptyUser = """
                 Я не нашел вашей записи в журнале. Для работы мне нужно идентифицировать вас по домовому чату жильцов.\n
                 Для этого вам нужно меня вызвать из вашего домового чата жильцов.\n

@@ -10,6 +10,30 @@ import Vapor
 
 final class DatabaseService {
     
+    static func createPath(for run: RunType, file: String, app: Vapor.Application) -> String {
+        if let workingDirectory = URL(string: app.directory.workingDirectory) {
+            let dataDirectory = workingDirectory.appendingPathComponent("data")
+            if !FileManager.default.fileExists(atPath: dataDirectory.path) {
+                do {
+                    try FileManager.default.createDirectory(atPath: dataDirectory.path, withIntermediateDirectories: true)
+                } catch {
+                    print(error.localizedDescription)
+                }
+            }
+        }
+        let databasePath: String = {
+            switch RUNTYPE {
+            case .dev:
+                return app.directory.workingDirectory + "data/\(file)"
+            case .prod:
+                return "/data/\(file)"
+            }
+        }()
+        return databasePath
+    }
+    
+    // MARK: - House
+    
     static func saveHouse(userId: Int64, newHouse: House.NewHouse, app: Vapor.Application) async throws -> Result<House, TransactionError> {
         if let existHouse = try await House.find(newHouse.id, on: app.db) {
             return .failure(.alreadyExist(name: existHouse.name))
@@ -70,6 +94,8 @@ final class DatabaseService {
         }
         return .success(house)
     }
+    
+    // MARK: - Resident
     
     static func isExistResident(userId: Resident.IDValue, app: Vapor.Application) async throws -> Bool {
         if let _ = try await Resident.find(userId, on: app.db) {
@@ -183,11 +209,13 @@ final class DatabaseService {
         }
     }
     
-    static func addAuto(chatId: Int64, userId: Int64, app: Vapor.Application, number: String) async throws -> Result<Car, CarError> {
+    // MARK: - Car
+    
+    static func addCar(chatId: Int64, userId: Int64, app: Vapor.Application, number: String) async throws -> Result<Car, CarError> {
         return .failure(.empty)
     }
     
-    static func addBlockedAuto(chatId: Int64, userId: Int64, app: Vapor.Application, number: String) async throws -> Result<BlockedCar, CarError> {
+    static func addBlockedCar(chatId: Int64, userId: Int64, app: Vapor.Application, number: String) async throws -> Result<BlockedCar, CarError> {
         let houseResult = try await DatabaseService.getHouse(for: userId, app: app)
         switch houseResult {
         case .success(let house):
@@ -204,8 +232,8 @@ final class DatabaseService {
         }
     }
     
-    static func getBlockedAutoList(chatId: House.IDValue, app: Vapor.Application) async throws -> Result<[BlockedCar], CarError> {
-        try await cleanBlockedAutoList(app: app)
+    static func getBlockedCarList(chatId: House.IDValue, app: Vapor.Application) async throws -> Result<[BlockedCar], CarError> {
+        try await cleanBlockedCarList(app: app)
         let expiredDate = Calendar.current.date(byAdding: .hour, value: -12, to: Date.now)
         let blockedCars = try await BlockedCar.query(on: app.db)
             .filter(\.$house.$id == chatId)
@@ -220,7 +248,7 @@ final class DatabaseService {
     }
     
     // Delete all objects with an expiration date of 12 hours
-    static private func cleanBlockedAutoList(app: Vapor.Application) async throws {
+    static private func cleanBlockedCarList(app: Vapor.Application) async throws {
         let blockedList = try await BlockedCar.query(on: app.db).all()
         let dateNow = Date.now
         blockedList.forEach { blockedCar in

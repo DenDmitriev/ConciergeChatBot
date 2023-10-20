@@ -34,7 +34,7 @@ final class DefaultBotHandlers: BotHandler {
             } else {
                 let keyboard: TGInlineKeyboardMarkup = .init(inlineKeyboard: buttons)
                 params = .init(chatId: .chat(userId),
-                               text: "Какой у вас вопрос?",
+                               text: Dialog.defaultQuestion,
                                replyMarkup: .inlineKeyboardMarkup(keyboard))
             }
             
@@ -75,7 +75,7 @@ final class DefaultBotHandlers: BotHandler {
             } else {
                 let keyboard: TGInlineKeyboardMarkup = .init(inlineKeyboard: buttons)
                 params = .init(chatId: .chat(userId),
-                               text: "Какой у вас вопрос?",
+                               text: Dialog.defaultQuestion,
                                replyMarkup: .inlineKeyboardMarkup(keyboard))
             }
             

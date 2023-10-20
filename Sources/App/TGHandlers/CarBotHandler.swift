@@ -32,7 +32,6 @@ final class CarBotHandler: BotHandler {
         let dialogState = state[userId] ?? .ready
         switch dialogState {
         case .ready:
-            print("ready")
             return
         case .waitNumber:
             try await addResidentAutoNumberRequest(chatId: chatId, userId: userId, app: app, connection: connection, update: update, bot: bot)
@@ -56,7 +55,7 @@ final class CarBotHandler: BotHandler {
             } else {
                 let keyboard: TGInlineKeyboardMarkup = .init(inlineKeyboard: buttons)
                 params = .init(chatId: .chat(user.id),
-                                                        text: "Какой у вас вопрос?",
+                                                        text: Dialog.defaultQuestion,
                                                         replyMarkup: .inlineKeyboardMarkup(keyboard))
             }
             
@@ -73,7 +72,7 @@ final class CarBotHandler: BotHandler {
                 let chatId: Int64 = getNumber(url, query: Method.blocked.query(.chatId))
             else { return }
             
-            let blockedListResult = try await DatabaseService.getBlockedAutoList(chatId: chatId, app: app)
+            let blockedListResult = try await DatabaseService.getBlockedCarList(chatId: chatId, app: app)
             switch blockedListResult {
             case .success(let blockedList):
                 let text = Method.blocked.text + "\n"
@@ -89,7 +88,7 @@ final class CarBotHandler: BotHandler {
                     try await bot.sendMessage(params: params)
                 }
             case .failure:
-                let text = "Список пуст."
+                let text = Dialog.emptyList
                 let params: TGSendMessageParams = .init(chatId: .chat(user.id), text: text)
                 try await bot.sendMessage(params: params)
             }
@@ -126,7 +125,7 @@ final class CarBotHandler: BotHandler {
             }
             
             let text: String
-            let result = try await DatabaseService.addBlockedAuto(chatId: chatId, userId: userId, app: app, number: value)
+            let result = try await DatabaseService.addBlockedCar(chatId: chatId, userId: userId, app: app, number: value)
             switch result {
             case .success(let blockedCar):
                 text = "Автомобиль 🚘 \(blockedCar.number) успешно добавлен в список запертых на 🅿️ парковке. Если владелец сделает запрос, то получит ваше имя для связи."
